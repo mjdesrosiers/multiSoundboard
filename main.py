@@ -1,16 +1,27 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import asyncio, evdev
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
 
+chosen = ([
+            dev for dev in devices if
+            (
+                    "Keyboard" in dev.name and "Control" not in dev.name
+            )
+          ])
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+device_paths = [dev.path for dev in chosen]
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+print(device_paths)
+
+assert len(device_paths)
+
+async def print_events(device):
+    async for event in device.async_read_loop():
+        print(device.path, evdev.categorize(event), sep=': ')
+
+for device in device_paths:
+    asyncio.ensure_future(print_events(device))
+
+loop = asyncio.get_event_loop()
+loop.run_forever()
