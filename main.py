@@ -1,6 +1,10 @@
 import asyncio, evdev
+import os
+
 from evdev import ecodes
 import pygame
+
+print(os.getcwd())
 
 devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
 
