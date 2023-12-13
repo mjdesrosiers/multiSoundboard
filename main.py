@@ -37,9 +37,10 @@ sound_map = {
 path_noise = "./sounds/noise.mp3"
 
 async def play_noise(channel, noise_path):
-    #channel_noise.play(pygame.mixer.Sound(path_noise), -1)
-    #channel_noise.set_volume(1.0)
-    pass
+    sound = pygame.mixer.Sound(noise_path)
+    sound.set_volume(0.2)
+    channel_noise.play(sound, -1)
+    # channel_noise.set_volume(0.1)
 
 async def print_events(device, channel):
     async for event in device.async_read_loop():
