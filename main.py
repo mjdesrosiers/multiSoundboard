@@ -38,7 +38,7 @@ path_noise = "./sounds/noise.mp3"
 
 async def play_noise(channel, noise_path):
     sound = pygame.mixer.Sound(noise_path)
-    sound.set_volume(0.01)
+    sound.set_volume(0.005)
     channel.play(sound, -1)
     # channel_noise.set_volume(0.1)
 
