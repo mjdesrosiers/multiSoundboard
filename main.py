@@ -21,6 +21,8 @@ print(device_paths)
 
 assert len(device_paths)
 
+volume = 0.3
+
 sound_map = {
     ecodes.KEY_KP0: "./sounds/fart.mp3",
     ecodes.KEY_KP1: "./sounds/fart.mp3",
@@ -31,8 +33,14 @@ sound_map = {
     ecodes.KEY_KP6: "./sounds/fart.mp3",
     ecodes.KEY_KP7: "./sounds/fart.mp3",
     ecodes.KEY_KP8: "./sounds/fart.mp3",
-    ecodes.KEY_KP9: "./sounds/fart.mp3",
+    ecodes.KEY_KP9: "./sounds/skillissue.mp3",
 }
+
+for k in sound_map:
+    path = sound_map[k]
+    sound = pygame.mixer.Sound(path)
+    sound.set_volume(0.2)
+    sound_map[k] = sound
 
 path_noise = "./sounds/noise.mp3"
 
@@ -46,10 +54,9 @@ async def print_events(device, channel):
     async for event in device.async_read_loop():
         if event.type == ecodes.EV_KEY:
             print(device.path, evdev.categorize(event), sep=': ')
-        sound_path = sound_map.get(event.code)
-        if sound_path and event.value == 1:
-            print(sound_path)
-            channel.play(pygame.mixer.Sound(sound_path))
+        sound = sound_map.get(event.code)
+        if sound and event.value == 1:
+            channel.play(sound)
 
 
 pygame.mixer.init()
