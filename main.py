@@ -34,7 +34,7 @@ sound_map = {
     ecodes.KEY_KP9: "sounds\\fart.mp3",
 }
 
-path_noise = "sounds\\noise.mp3"
+path_noise = "./sounds/noise.mp3"
 
 async def print_events(device, channel):
     async for event in device.async_read_loop():
