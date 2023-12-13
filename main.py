@@ -40,6 +40,7 @@ async def print_events(device, channel):
             print(sound_path)
 
 
+pygame.mixer.init()
 for i, path in enumerate(device_paths):
     dev = evdev.InputDevice(path)
     channel = pygame.mixer.Channel(i)
