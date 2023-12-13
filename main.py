@@ -37,10 +37,11 @@ def volume_change(amount):
     for key in sound_map:
         sound = sound_map[key]
         volume_current = sound.get_volume()
-        volume_current += amount
+        volume_new = volume_current + amount
         volume_current = min(volume_current, 1.0)
         volume_current = max(volume_current, 0)
-        sound.set_volume(volume_current)
+        sound.set_volume(volume_new)
+        print(f"Changed volume from {volume_current} to {volume_new}")
 
 action_map = {
     ecodes.KEY_KPPLUS: (volume_change, 0.1),
