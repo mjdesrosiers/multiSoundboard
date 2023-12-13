@@ -18,16 +18,16 @@ print(device_paths)
 assert len(device_paths)
 
 sound_map = {
-    ecodes.KEY_KP0: "/sounds/sound0.wav",
-    ecodes.KEY_KP1: "/sounds/sound1.wav",
-    ecodes.KEY_KP2: "/sounds/sound2.wav",
-    ecodes.KEY_KP3: "/sounds/sound3.wav",
-    ecodes.KEY_KP4: "/sounds/sound4.wav",
-    ecodes.KEY_KP5: "/sounds/sound5.wav",
-    ecodes.KEY_KP6: "/sounds/sound6.wav",
-    ecodes.KEY_KP7: "/sounds/sound7.wav",
-    ecodes.KEY_KP8: "/sounds/sound8.wav",
-    ecodes.KEY_KP9: "/sounds/sound9.wav",
+    ecodes.KEY_KP0: "/sounds/fart.mp3",
+    ecodes.KEY_KP1: "/sounds/fart.mp3",
+    ecodes.KEY_KP2: "/sounds/fart.mp3",
+    ecodes.KEY_KP3: "/sounds/fart.mp3",
+    ecodes.KEY_KP4: "/sounds/fart.mp3",
+    ecodes.KEY_KP5: "/sounds/fart.mp3",
+    ecodes.KEY_KP6: "/sounds/fart.mp3",
+    ecodes.KEY_KP7: "/sounds/fart.mp3",
+    ecodes.KEY_KP8: "/sounds/fart.mp3",
+    ecodes.KEY_KP9: "/sounds/fart.mp3",
 }
 
 
@@ -36,15 +36,16 @@ async def print_events(device, channel):
         if event.type == ecodes.EV_KEY:
             print(device.path, evdev.categorize(event), sep=': ')
         sound_path = sound_map.get(event.code)
-        if sound_path:
+        if sound_path and event.value == 1:
             print(sound_path)
+            channel.play(pygame.mixer.Sound(sound_path))
 
 
 pygame.mixer.init()
 for i, path in enumerate(device_paths):
     dev = evdev.InputDevice(path)
-    channel = pygame.mixer.Channel(i)
-    asyncio.ensure_future(print_events(dev, channel))
+    mixer_channel = pygame.mixer.Channel(i)
+    asyncio.ensure_future(print_events(dev, mixer_channel))
 
 loop = asyncio.get_event_loop()
 loop.run_forever()
