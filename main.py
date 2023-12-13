@@ -21,7 +21,7 @@ async def print_events(device):
         print(device.path, evdev.categorize(event), sep=': ')
 
 for device in device_paths:
-    asyncio.ensure_future(print_events(device))
+    asyncio.ensure_future(print_events(evdev.InputDevice(device)))
 
 loop = asyncio.get_event_loop()
 loop.run_forever()
