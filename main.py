@@ -33,6 +33,20 @@ sound_map = {
     ecodes.KEY_KP9: "./sounds/skillissue.mp3",
 }
 
+def volume_change(amount):
+    for key in sound_map:
+        sound = sound_map[key]
+        volume_current = sound.get_volume()
+        volume_current += amount
+        volume_current = min(volume_current, 1.0)
+        volume_current = max(volume_current, 0)
+        sound.set_volume(volume_current)
+
+action_map = {
+    ecodes.KEY_KPPLUS: (volume_change, 0.1),
+    ecodes.KEY_KPMINUS: (volume_change, -0.1)
+}
+
 for k in sound_map:
     path = sound_map[k]
     sound = pygame.mixer.Sound(path)
@@ -54,7 +68,9 @@ async def print_events(device, channel):
         sound = sound_map.get(event.code)
         if sound and event.value == 1:
             channel.play(sound)
-
+        action, param = action_map.get(event.code, (None, None))
+        if action and event.value == 1:
+            action(param)
 
 channel_noise = pygame.mixer.Channel(0)
 
