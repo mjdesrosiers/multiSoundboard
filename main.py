@@ -22,16 +22,16 @@ print(device_paths)
 assert len(device_paths)
 
 sound_map = {
-    ecodes.KEY_KP0: "sounds\\fart.mp3",
-    ecodes.KEY_KP1: "sounds\\fart.mp3",
-    ecodes.KEY_KP2: "sounds\\fart.mp3",
-    ecodes.KEY_KP3: "sounds\\fart.mp3",
-    ecodes.KEY_KP4: "sounds\\fart.mp3",
-    ecodes.KEY_KP5: "sounds\\fart.mp3",
-    ecodes.KEY_KP6: "sounds\\fart.mp3",
-    ecodes.KEY_KP7: "sounds\\fart.mp3",
-    ecodes.KEY_KP8: "sounds\\fart.mp3",
-    ecodes.KEY_KP9: "sounds\\fart.mp3",
+    ecodes.KEY_KP0: "./sounds/fart.mp3",
+    ecodes.KEY_KP1: "./sounds/fart.mp3",
+    ecodes.KEY_KP2: "./sounds/fart.mp3",
+    ecodes.KEY_KP3: "./sounds/fart.mp3",
+    ecodes.KEY_KP4: "./sounds/fart.mp3",
+    ecodes.KEY_KP5: "./sounds/fart.mp3",
+    ecodes.KEY_KP6: "./sounds/fart.mp3",
+    ecodes.KEY_KP7: "./sounds/fart.mp3",
+    ecodes.KEY_KP8: "./sounds/fart.mp3",
+    ecodes.KEY_KP9: "./sounds/fart.mp3",
 }
 
 path_noise = "./sounds/noise.mp3"
