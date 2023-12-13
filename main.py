@@ -34,6 +34,7 @@ sound_map = {
     ecodes.KEY_KP9: "sounds\\fart.mp3",
 }
 
+path_noise = "sounds\\noise.mp3"
 
 async def print_events(device, channel):
     async for event in device.async_read_loop():
@@ -46,9 +47,13 @@ async def print_events(device, channel):
 
 
 pygame.mixer.init()
+channel_noise = pygame.mixer.Channel(0)
+channel_noise.play(pygame.mixer.Sound(path_noise))
+channel_noise.set_volume(0.1)
+
 for i, path in enumerate(device_paths):
     dev = evdev.InputDevice(path)
-    mixer_channel = pygame.mixer.Channel(i)
+    mixer_channel = pygame.mixer.Channel(i + 1)
     asyncio.ensure_future(print_events(dev, mixer_channel))
 
 loop = asyncio.get_event_loop()
