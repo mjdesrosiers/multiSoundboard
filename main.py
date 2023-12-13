@@ -5,23 +5,20 @@ from evdev import ecodes
 import pygame
 
 print(os.getcwd())
-
 devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-
 chosen = ([
     dev for dev in devices if
     (
             "Keyboard" in dev.name and "Control" not in dev.name
     )
 ])
-
 device_paths = [dev.path for dev in chosen]
-
 print(device_paths)
-
 assert len(device_paths)
 
 volume = 0.3
+
+pygame.mixer.init()
 
 sound_map = {
     ecodes.KEY_KP0: "./sounds/fart.mp3",
@@ -59,7 +56,6 @@ async def print_events(device, channel):
             channel.play(sound)
 
 
-pygame.mixer.init()
 channel_noise = pygame.mixer.Channel(0)
 
 
