@@ -9,9 +9,10 @@ def is_shutdown_condition_triggered():
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(PIN_SHUTDOWN_CHECK, GPIO.IN)
         value = GPIO.input(PIN_SHUTDOWN_CHECK)
+        return False
         return not value
     except:
-        return True
+        return False
 
 should_shutdown = is_shutdown_condition_triggered()
 
