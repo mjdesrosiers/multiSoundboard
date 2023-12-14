@@ -17,7 +17,7 @@ def is_shutdown_condition_triggered():
 should_shutdown = is_shutdown_condition_triggered()
 
 with open("shutdown_log.txt", "a") as f:
-    f.write(f"{datetime.datetime.now()}\tShutdown = {should_shutdown}")
+    f.write(f"{datetime.datetime.now()}\tShutdown = {should_shutdown}\n")
 
 if should_shutdown:
     call("sudo nohup shutdown -h now", shell=True)
