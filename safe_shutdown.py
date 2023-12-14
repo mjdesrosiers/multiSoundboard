@@ -4,7 +4,7 @@ import time
 
 PIN_SHUTDOWN_CHECK = 5
 CHECK_RATE = 3
-DELAY = 1.0 / CHECK_RATE
+DELAY = 60.0 / CHECK_RATE
 
 
 def is_shutdown_condition_triggered():
