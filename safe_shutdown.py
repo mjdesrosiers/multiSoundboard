@@ -3,7 +3,7 @@ import datetime
 import time
 
 PIN_SHUTDOWN_CHECK = 23
-CHECK_RATE = 3
+CHECK_RATE = 12
 DELAY = 60.0 / CHECK_RATE
 
 _TESTING_DEBUG_ = True
