@@ -6,6 +6,7 @@ PIN_SHUTDOWN_CHECK = 23
 CHECK_RATE = 3
 DELAY = 60.0 / CHECK_RATE
 
+_TESTING_DEBUG_ = True
 
 def is_shutdown_condition_triggered():
     try:
@@ -13,6 +14,8 @@ def is_shutdown_condition_triggered():
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(PIN_SHUTDOWN_CHECK, GPIO.IN)
         value = GPIO.input(PIN_SHUTDOWN_CHECK)
+        if _TESTING_DEBUG_:
+            print(f"Input pin value read was {value}")
         return not value
     except:
         return False
