@@ -6,6 +6,9 @@ import pygame
 
 print(os.getcwd())
 devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
+for dev in devices:
+    print(dev.name)
+
 chosen = ([
     dev for dev in devices if
     (
