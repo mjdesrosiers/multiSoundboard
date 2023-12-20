@@ -2,6 +2,8 @@ import asyncio
 import pprint
 import random
 import time
+import pyudev
+from pyudev import MonitorObserver
 
 
 class EvdevTask:
@@ -18,27 +20,35 @@ async def udev_task(task_queue):
               "killed": False,
               "task": None} for _ in range(n_tasks)]
     start_time = time.time()
-    while True:
-        since_start = time.time() - start_time
-        for (idx, task) in enumerate(tasks):
-            if task["start"] < since_start and not task["started"] and not task["killed"]:
-                # try udev.device_node for argument to InputDevice()
-                print(f"[udev] starting task = {idx}")
-                task["started"] = True
+
+    active_keyboards = {}
+    context = pyudev.Context()
+    monitor = pyudev.Monitor.from_netlink(context)
+    monitor.filter_by(subsystem='input')
+
+    def device_event(action, device):
+        async def async_event(action, device):
+            # TODO: filter down for non-control keyboards
+            if action == "CONNECT":
+                print(f"[udev] starting task = {device.device_node}")
                 await task_queue.put([
                     EvdevTask.CONNECT,
-                    idx
+                    device.device_node
                 ])
-                pass
-            if (task["duration"] + task["start"]) < since_start and task["started"] and not task["killed"]:
-                print(f"[udev] killing task = {idx}")
-                task["killed"] = True
+            if action == "DISCONNECT":
+                print(f"[udev] killing task = {device.device_node}")
                 await task_queue.put([
                     EvdevTask.DISCONNECT,
-                    idx
+                    device.device_node
                 ])
-                pass
-        await asyncio.sleep(0.001)
+        print('background event {0}: {1}'.format(action, device))
+        asyncio.run(async_event(action, device))
+
+    observer = MonitorObserver(monitor, device_event, name='monitor-observer')
+    observer.start()
+
+    while True:
+        await asyncio.sleep(1)
 
 
 async def evdev_task(task_queue):
