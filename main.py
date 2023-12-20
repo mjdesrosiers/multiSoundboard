@@ -12,7 +12,7 @@ for dev in devices:
 chosen = ([
     dev for dev in devices if
     (
-            "Keyboard" in dev.name and "Control" not in dev.name
+        ("Keyboard" in dev.name or "Wireless Receiver" in dev.name) and "Control" not in dev.name
     )
 ])
 device_paths = [dev.path for dev in chosen]
