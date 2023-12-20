@@ -95,7 +95,7 @@ for i, path in enumerate(device_paths):
     mixer_channel = pygame.mixer.Channel(i + 2)
     asyncio.ensure_future(print_events(dev, mixer_channel))
 
-asyncio.ensure_future(play_noise(channel_noise, path_noise))
+# asyncio.ensure_future(play_noise(channel_noise, path_noise))
 
 loop = asyncio.get_event_loop()
 loop.run_forever()
