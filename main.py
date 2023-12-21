@@ -130,7 +130,7 @@ if __name__ == "__main__":
         mixer_channel = pygame.mixer.Channel(i + 2)
         asyncio.ensure_future(watch_keyboard(dev, mixer_channel, status_queue))
 
-    asyncio.ensure_future(update_pwm_status(20, status_queue))
+    asyncio.ensure_future(update_pwm_status(23, status_queue))
     # asyncio.ensure_future(play_noise(channel_noise))
 
     loop = asyncio.get_event_loop()
