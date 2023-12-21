@@ -1,32 +1,35 @@
 import asyncio, evdev
+import logging
 import os
-import RPi.GPIO as GPIO
+import sys
+
+try:
+    import RPi.GPIO
+except (RuntimeError, ModuleNotFoundError):
+    import fake_rpigpio.utils
+
+    fake_rpigpio.utils.install()
 
 from evdev import ecodes
 import pygame
 
 from SystemStatus import SystemStatus
 
-print(os.getcwd())
-
 
 def get_connected_keyboards():
-    global path, dev, device_paths
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
-    for dev in devices:
-        print(dev.name)
     chosen = ([
         dev for dev in devices if
         (
                 ("Keyboard" in dev.name or "Wireless Receiver" in dev.name) and "Control" not in dev.name
         )
     ])
-    device_paths = [dev.path for dev in chosen]
-    return device_paths
+    for d in devices:
+        logging.debug(f"Found keyboard {d.name} -> {d.path}")
+    return [d.path for d in chosen]
 
 
 device_paths = get_connected_keyboards()
-print(device_paths)
 assert len(device_paths)
 
 START_VOLUME = 0.1
@@ -67,7 +70,7 @@ def volume_change(amount):
         volume_current = min(volume_current, 1.0)
         volume_current = max(volume_current, 0)
         sound.set_volume(volume_new)
-        print(f"Changed volume from {volume_current} to {volume_new}")
+        logging.debug(f"Changed volume from {volume_current} to {volume_new}")
     volume_current = volume_update_sound.get_volume()
     volume_current += amount
     volume_current = min(volume_current, 1.0)
@@ -92,7 +95,7 @@ async def play_noise(channel):
 async def watch_keyboard(device, audio_channel, status_queue):
     async for event in device.async_read_loop():
         if event.type == ecodes.EV_KEY and event.value == 1:
-            print(device.path, evdev.categorize(event), sep=': ')
+            logging.debug(device.path, evdev.categorize(event), sep=': ')
         sound = sound_map.get(event.code)
         if sound and event.value == 1:
             audio_channel.play(sound)
@@ -116,15 +119,19 @@ async def update_pwm_status(pwm_pin, pwm_queue):
         except TimeoutError:
             status = SystemStatus.Idle
 
-status_queue = asyncio.Queue()
 
-for i, path in enumerate(device_paths):
-    dev = evdev.InputDevice(path)
-    mixer_channel = pygame.mixer.Channel(i + 2)
-    asyncio.ensure_future(watch_keyboard(dev, mixer_channel, status_queue))
+if __name__ == "__main__":
+    logging.basicConfig(filename='example.log', encoding='utf-8', level=logging.DEBUG)
+    logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
-asyncio.ensure_future(update_pwm_status(20, status_queue))
-# asyncio.ensure_future(play_noise(channel_noise))
+    status_queue = asyncio.Queue()
+    for i, path in enumerate(device_paths):
+        dev = evdev.InputDevice(path)
+        mixer_channel = pygame.mixer.Channel(i + 2)
+        asyncio.ensure_future(watch_keyboard(dev, mixer_channel, status_queue))
 
-loop = asyncio.get_event_loop()
-loop.run_forever()
+    asyncio.ensure_future(update_pwm_status(20, status_queue))
+    # asyncio.ensure_future(play_noise(channel_noise))
+
+    loop = asyncio.get_event_loop()
+    loop.run_forever()
