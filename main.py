@@ -112,7 +112,7 @@ async def update_pwm_status(pwm_pin, pwm_queue):
     pwm = GPIO.PWM(pwm_pin, 1)
     while True:
         pwm.ChangeFrequency(status.freq)
-        pwm.start()
+        pwm.start(50)
         try:
             async with asyncio.timeout(status.timeout):
                 status = await pwm_queue.get()
