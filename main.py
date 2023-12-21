@@ -4,7 +4,7 @@ import os
 import sys
 
 try:
-    import RPi.GPIO
+    import RPi.GPIO as GPIO
 except (RuntimeError, ModuleNotFoundError):
     import fake_rpigpio.utils
 
